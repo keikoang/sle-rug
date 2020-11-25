@@ -15,8 +15,8 @@ syntax Question
   = normal_question: Str Id ":" Type
   | computed_question: Str Id ":" Type "=" Expr
   | block: "{" Question* "}"
-  | if_then_else: "if" "(" Expr ")" "{" Question "}"
-  | if_then: "if" "(" Expr ")" "{" Question "}" "else" "{" Question "}"
+  | if_then_else: "if" "(" Expr ")" "{" Question* "}"
+  | if_then: "if" "(" Expr ")" "{" Question* "}" "else" "{" Question* "}"
   ; 
 
 // TODO: +, -, *, /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
@@ -30,21 +30,21 @@ syntax Expr
   | pars: "(" Expr ")" //highest precedence
   > right not: "!" Expr //right associative
   > left (
-  mul: Expr "*" Expr
+    mul: Expr "*" Expr
   | div: Expr "/" Expr
   )
-  | left (
-  add: Expr "+" Expr
+  > left (
+    add: Expr "+" Expr
   | sub: Expr "-" Expr
   )
   //generally i think comparison operator should be non associative
   > non-assoc (
-  eq: Expr "==" Expr
+    eq: Expr "==" Expr
   | neq: Expr "!=" Expr
   )
   //non associative because for example 3 < 4 < 5 is not (3 < 4) < 5
-  | non-assoc(
-  gt: Expr "\>" Expr
+  > non-assoc(
+    gt: Expr "\>" Expr
   | lt: Expr "\<" Expr
   | leq: Expr "\<=" Expr
   | geq: Expr "\>=" Expr
