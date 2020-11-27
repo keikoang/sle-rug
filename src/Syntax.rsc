@@ -8,17 +8,17 @@ extend lang::std::Id;
  */
 
 start syntax Form 
-  = "form" Id "{" Question* "}"; 
+  = "form" Id id "{" Question* questions"}"; 
 
 // TODO: question, computed question, block, if-then-else, if-then
 syntax Question
-  = normal_question: Str Id ":" Type
-  | computed_question: Str Id ":" Type "=" Expr
-  | block: "{" Question* "}"
-  | if_then_else: "if" "(" Expr ")" "{" Question* "}"
-  | if_then: "if" "(" Expr ")" "{" Question* "}" "else" "{" Question* "}"
+  = normal_question: Str label Id ident ":" Type qtype
+  | computed_question: Str label Id ident ":" Type qtype "=" Expr expr
+  | block: "{" Question* questions "}"
+  | if_then: "if" "(" Expr condition ")" "{" Question* trueQuestions"}"
+  | if_then_else: "if" "(" Expr condition ")" "{" Question* trueQuestions "}" "else" "{" Question* falseQuestions"}"
   ; 
-
+ 
 // TODO: +, -, *, /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
 // Think about disambiguation using priorities and associativity
 // and use C/Java style precedence rules (look it up on the internet)
@@ -27,30 +27,30 @@ syntax Expr
   | Bool 
   | Int
   | Str
-  | pars: "(" Expr ")" //highest precedence
-  > right not: "!" Expr //right associative
+  | pars: "(" Expr expr")" //highest precedence
+  > right not: "!" Expr expr //right associative
   > left (
-    mul: Expr "*" Expr
-  | div: Expr "/" Expr
+    mul: Expr left "*" Expr right
+  | div: Expr left "/" Expr right
   )
   > left (
-    add: Expr "+" Expr
-  | sub: Expr "-" Expr
+    add: Expr left "+" Expr right
+  | sub: Expr left "-" Expr right
   )
   //generally i think comparison operator should be non associative
   > non-assoc (
-    eq: Expr "==" Expr
-  | neq: Expr "!=" Expr
+    eq: Expr left "==" Expr right
+  | neq: Expr left "!=" Expr right
   )
   //non associative because for example 3 < 4 < 5 is not (3 < 4) < 5
   > non-assoc(
-    gt: Expr "\>" Expr
-  | lt: Expr "\<" Expr
-  | leq: Expr "\<=" Expr
-  | geq: Expr "\>=" Expr
+    gt: Expr left "\>" Expr right
+  | lt: Expr left "\<" Expr right
+  | leq: Expr left "\<=" Expr right
+  | geq: Expr left "\>=" Expr right
   )
-  > left and: Expr "&&" Expr
-  > left or: Expr "||" Expr 
+  > left and: Expr left "&&" Expr right
+  > left or: Expr left "||" Expr right
   ;
   
 // was confused if it should be these or Bool | Int | Str  
