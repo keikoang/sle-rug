@@ -6,6 +6,18 @@ import AST;
 import ParseTree;
 import String;
 import Boolean;
+
+/* for testing
+import ParseTree;
+import Syntax;
+l = //copy source location//;
+pt = parse(#start[Form], l);
+import CST2AST;
+ast = cst2ast(pt);
+import Resolve;
+resolve(ast);
+*/
+
 /*
  * Implement a mapping from concrete syntax trees (CSTs) to abstract syntax trees (ASTs)
  *
@@ -42,15 +54,15 @@ AExpr cst2ast(Expr e) {
     case (Expr)`<Id x>`:
     	return ref(id("<x>", src=x@\loc), src=x@\loc);
     case (Expr)`<Bool b>`:
-    	return boolean(fromString("<b>"), src=e@\loc);
+    	return boolean(fromString("<b>"), src=b@\loc);
     case (Expr)`<Int i>`:
-    	return integer(toInt("<i>"), src=e@\loc);
+    	return integer(toInt("<i>"), src=i@\loc);
     case (Expr)`<Str s>`:
-    	return string("<s>", src=e@\loc);
+    	return string("<s>", src=s@\loc);
     case (Expr)`(<Expr expr>)`:
-    	return pars(cst2ast(expr), src=e@\loc);
+    	return pars(cst2ast(expr), src=expr@\loc);
     case (Expr)`!<Expr expr>`:
-    	return not(cst2ast(expr), src=e@\loc);
+    	return not(cst2ast(expr), src=expr@\loc);
     case (Expr)`<Expr leftExpr> * <Expr rightExpr>`:
 		return mul(cst2ast(leftExpr), cst2ast(rightExpr), src=e@\loc);
     case (Expr)`<Expr leftExpr> / <Expr rightExpr>`:
@@ -82,11 +94,11 @@ AExpr cst2ast(Expr e) {
 AType cst2ast(Type t) {
 	switch (t) {
     	case (Type)`boolean`:
-      		return boolean();
+      		return boolean(src=t@\loc);
     	case (Type)`integer`:
-      		return integer();
+      		return integer(src=t@\loc);
     	case (Type)`string`:
-    	    return string();
+    	    return string(src=t@\loc);
     	default: throw "Unhandled type: <t>";
 	}
 }
