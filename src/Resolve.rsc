@@ -28,12 +28,9 @@ RefGraph resolve(AForm f) = <us, ds, us o ds>
 //visit all AExpr to get the source and name(id)
 Use uses(AForm f) {
 	return {<e.src, e.id.name> | /AExpr e := f.questions, e has id};
-    //return {<id.src, id.name> | /ref(AId id) := f}; 
 }
 
 //visit all normal_question and computed_question
 Def defs(AForm f) {
 	return {<q.ident.name, q.src> | /AQuestion q := f.questions, q has ident};
-    /*return {<id.name, id.src> | /normal_question(_, AId id, _) := f} 
-    + {<id.name, id.src> | /computed_question(_, AId id, _, _) := f}; */
 }

@@ -7,16 +7,6 @@ import ParseTree;
 import String;
 import Boolean;
 
-/* for testing
-import ParseTree;
-import Syntax;
-l = //copy source location//;
-pt = parse(#start[Form], l);
-import CST2AST;
-ast = cst2ast(pt);
-import Resolve;
-resolve(ast);
-*/
 
 /*
  * Implement a mapping from concrete syntax trees (CSTs) to abstract syntax trees (ASTs)
