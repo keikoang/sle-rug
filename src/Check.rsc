@@ -48,7 +48,7 @@ TEnv collect(AForm f) {
 	visit(f){
 		case normal_question(str label, id(name), AType atype, src = loc source) :
 			type_environment += {<source, name, label, ast2type(atype)>};	
-		case computed_question(str label, id(name), AType atype, AExpr expr, src = loc source) :
+		case computed_question(str label, id(name), AType atype, AExpr _, src = loc source) :
 			type_environment += {<source, name, label, ast2type(atype)>};
 	}
   	return type_environment; 
@@ -64,16 +64,16 @@ set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
 set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
 	set[Message] msgs = {};
 	switch(q){
-		case normal_question(str question, AId id, AType ty, src = loc l):
+		case normal_question(str _, AId id, AType _, src = loc l):
 			msgs += {error("Duplicate question with different type", l) | (size((tenv<1,3>)[id.name]) > 1)} 
 			+ {warning("Same label for different questions", l) | (size((tenv<2,0>)[q.label]) > 1)}
 			+ {warning("Different label for occurences of same question", l) | (size((tenv<1,2>)[q.ident.name]) > 1) };
-		case computed_question(str question, AId id, AType ty, AExpr expr, src = loc l):
+		case computed_question(str _, AId id, AType _, AExpr expr, src = loc l):
 			msgs += {error("Duplicate question with different type", l) | (size((tenv<1,3>)[id.name]) > 1)}
 			+ {warning("Same label for different questions", l) | (size((tenv<2,0>)[q.label]) > 1)}
 			+ {warning("Different label for occurences of same question", l) | (size((tenv<1,2>)[q.ident.name]) > 1)}
 			+ check(expr, tenv, useDef);
-		case block(list[AQuestion] questions, src = loc l):
+		case block(list[AQuestion] questions, src = loc _):
 			msgs += ({} | it + check(question, tenv, useDef) | /AQuestion question <- questions);
 		case if_then_else(AExpr condition, list[AQuestion] trueQuestions, list[AQuestion] falseQuestions, src = loc l):
 			msgs += {error("Condition is not boolean", l) | (typeOf(condition, tenv, useDef) != tbool())}
@@ -147,54 +147,54 @@ set[Message] check(AExpr e, TEnv tenv, UseDef useDef) {
 Type typeOf(AExpr e, TEnv tenv, UseDef useDef) {
   	switch (e) {
     	case ref(id(_, src = loc u)):  
-      		if (<u, loc d> <- useDef, <d, x, _, Type t> <- tenv) {
+      		if (<u, loc d> <- useDef, <d, _, _, Type t> <- tenv) {
         		return t;
       		}
-      	case boolean(bool b, src = loc u):
+      	case boolean(bool _, src = loc _):
       		return tbool();
-      	case integer(int i, src = loc u):
+      	case integer(int _, src = loc _):
       		return tint();
-      	case string(str s, src = loc u):
+      	case string(str _, src = loc _):
       		return tstr();
-      	case pars(AExpr expr, src = loc u):
+      	case pars(AExpr expr, src = loc _):
       		return typeOf(expr, tenv, useDef);
-      	case not(AExpr expr, src = loc u):
+      	case not(AExpr expr, src = loc _):
       		if (typeOf(expr, tenv, useDef) == tbool()) return tbool();
       		else return tunknown();
-      	case mul(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case mul(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tint() && typeOf(rightExpr, tenv, useDef) == tint()) return tint();
       		else return tunknown();
-      	case div(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case div(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tint() && typeOf(rightExpr, tenv, useDef) == tint()) return tint();
       		else return tunknown();
-      	case add(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case add(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tint() && typeOf(rightExpr, tenv, useDef) == tint()) return tint();
       		else return tunknown();
-      	case sub(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case sub(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tint() && typeOf(rightExpr, tenv, useDef) == tint()) return tint();
       		else return tunknown();
-      	case eq(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case eq(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tbool() && typeOf(rightExpr, tenv, useDef) == tint()) return tbool();
       		else return tunknown();
-      	case neq(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case neq(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tbool() && typeOf(rightExpr, tenv, useDef) == tint()) return tbool();
       		else return tunknown();
-      	case gt(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case gt(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tint() && typeOf(rightExpr, tenv, useDef) == tint()) return tbool();
       		else return tunknown();
-      	case lt(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case lt(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tint() && typeOf(rightExpr, tenv, useDef) == tint()) return tbool();
       		else return tunknown();
-      	case geq(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case geq(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tint() && typeOf(rightExpr, tenv, useDef) == tint()) return tbool();
       		else return tunknown();
-      	case leq(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case leq(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tint() && typeOf(rightExpr, tenv, useDef) == tint()) return tbool();
       		else return tunknown();
-      	case and(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case and(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tbool() && typeOf(rightExpr, tenv, useDef) == tint()) return tbool();
       		else return tunknown();
-      	case or(AExpr leftExpr, AExpr rightExpr, src = loc u):
+      	case or(AExpr leftExpr, AExpr rightExpr, src = loc _):
       		if (typeOf(leftExpr, tenv, useDef) == tbool() && typeOf(rightExpr, tenv, useDef) == tint()) return tbool();
       		else return tunknown();
   }
