@@ -3,6 +3,8 @@ module Transform
 import Syntax;
 import Resolve;
 import AST;
+import CST2AST;
+import IO;
 
 /* 
  * Transforming QL forms
@@ -74,7 +76,6 @@ start[Form] rename(start[Form] f, loc useOrDef, str newName, UseDef useDef) {
    	return visit(f) {
    		case (Id)`<Id thisId>` => newId when "<thisId>" == oldName
    	}
-   	return f; 
 } 
  
 str getOldName(AForm form, loc useOrDef) {
@@ -83,7 +84,7 @@ str getOldName(AForm form, loc useOrDef) {
 			if (s == useOrDef) {
 				return id.name;
 			}
-		case computed_question(str _, AId id,  AType _, AExpr expr, src = loc s):
+		case computed_question(str _, AId id,  AType _, AExpr _, src = loc s):
 			if (s == useOrDef) {
 				return id.name;
 			}
