@@ -1,5 +1,5 @@
 /* for testing
-import ParseTree;
+icmport ParseTree;
 import Syntax;
 l = //copy source location//;
 pt = parse(#start[Form], l);

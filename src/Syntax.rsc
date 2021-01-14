@@ -10,7 +10,6 @@ extend lang::std::Id;
 start syntax Form 
   = "form" Id id "{" Question* questions"}"; 
 
-// TODO: question, computed question, block, if-then-else, if-then
 syntax Question
   = normal_question: Str label Id ident ":" Type qtype
   | computed_question: Str label Id ident ":" Type qtype "=" Expr expr
@@ -19,9 +18,7 @@ syntax Question
   | if_then_else: "if" "(" Expr condition ")" "{" Question* trueQuestions "}" "else" "{" Question* falseQuestions"}"
   ; 
  
-// TODO: +, -, *, /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
-// Think about disambiguation using priorities and associativity
-// and use C/Java style precedence rules (look it up on the internet)
+
 syntax Expr 
   = Id \ "true" \ "false" // true/false are reserved keywords.
   | Bool 
@@ -61,7 +58,7 @@ syntax Type
   ;  
   
 //took this from series2, means everything a string is a quote,
-// follow by zero or more chars that is not a quote and another quote
+// follow by zero or more chars that is not a quote and followed by another quote
 lexical Str = [\"] ![\"]* [\"]; 
 
 //integer can be zero or other number, but cant be 03 for example
@@ -75,5 +72,10 @@ lexical Bool
   | "false"
   ;
 
-
+/*  For testing:
+	import ParseTree;
+	import Syntax;
+	l = //copy source location//;
+	pt = parse(#start[Form], l); 
+*/
 
