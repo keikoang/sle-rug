@@ -1,17 +1,3 @@
-/* for testing
-import ParseTree;
-import Syntax;
-l = //copy source location//;
-pt = parse(#start[Form], l);
-import CST2AST;
-ast = cst2ast(pt);
-import Resolve;
-graph = resolve(ast);
-import Check;
-tenv = collect(ast);
-check(ast, tenv, graph[2]);
-*/
-
 module Check
 
 import AST;
@@ -200,6 +186,21 @@ Type typeOf(AExpr e, TEnv tenv, UseDef useDef) {
   }
   return tunknown(); 
 }
+
+/* for testing
+   import ParseTree;
+   import Syntax;
+   l = //copy source location//;
+   pt = parse(#start[Form], l);
+   import CST2AST;
+   ast = cst2ast(pt);
+   import Resolve;
+   graph = resolve(ast);
+   import Check;
+   tenv = collect(ast);
+   check(ast, tenv, graph[2]);
+*/
+
 
 /* 
  * Pattern-based dispatch style:

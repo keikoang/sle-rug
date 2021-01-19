@@ -48,3 +48,12 @@ data AType(loc src = |tmp:///|)
   | integer()
   | string()
   ;
+  
+/* for testing
+   import ParseTree;
+   import Syntax;
+   l = //copy source location//;
+   pt = parse(#start[Form], l);
+   import CST2AST;
+   ast = cst2ast(pt);
+*/

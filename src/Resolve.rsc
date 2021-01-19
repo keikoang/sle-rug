@@ -7,10 +7,10 @@ import AST;
  */ 
 
 
-// modeling declaring occurrences of names
+// modeling declaring occurrences of names(location where the name is defined)
 alias Def = rel[str name, loc def];
 
-// modeling use occurrences of names
+// modeling use occurrences of names (names that are being used or referenced)
 alias Use = rel[loc use, str name];
 
 alias UseDef = rel[loc use, loc def];
@@ -34,3 +34,14 @@ Use uses(AForm f) {
 Def defs(AForm f) {
 	return {<q.ident.name, q.src> | /AQuestion q := f.questions, q has ident};
 }
+
+/* for testing
+   import ParseTree;
+   import Syntax;
+   l = //copy source location//;
+   pt = parse(#start[Form], l);
+   import CST2AST; 
+   ast = cst2ast(pt);
+   import Resolve;
+   graph = resolve(ast);
+*/

@@ -1,15 +1,3 @@
-/*
-import ParseTree;
-import Syntax;
-l = //copy source location//;
-pt = parse(#start[Form], l);
-import CST2AST;
-ast = cst2ast(pt);
-import Eval;
-inp = input("sellingPrice", vint(30));
-venv = intialEnv(ast);
-evaluated = eval(ast, inp, venv);
-*/
 module Eval
 
 import AST;
@@ -63,8 +51,6 @@ VEnv initialEnv(AForm f) {
 	}
   	return venv;
 }
-
-
 // Because of out-of-order use and declaration of questions
 // we use the solve primitive in Rascal to find the fixpoint of venv.
 VEnv eval(AForm f, Input inp, VEnv venv) {
@@ -72,7 +58,6 @@ VEnv eval(AForm f, Input inp, VEnv venv) {
     venv = evalOnce(f, inp, venv);
   }
 }
-
 VEnv evalOnce(AForm f, Input inp, VEnv venv) {
   	for (/AQuestion aQuestion := f.questions) {
   		venv = eval(aQuestion, inp, venv);
@@ -94,24 +79,23 @@ VEnv eval(AQuestion q, Input inp, VEnv venv) {
   			}
   		case if_then_else(AExpr condition, list[AQuestion] trueQuestions, list[AQuestion] falseQuestions):
   			if (eval(condition, venv).b){
-  				for (/AQuestion tQuestion <- trueQuestions){
+  				for (/AQuestion tQuestion := trueQuestions){
   					venv = eval(tQuestion, inp, venv);
   				}
   			} else {
-  				for (/AQuestion fQuestion <- falseQuestions){
+  				for (/AQuestion fQuestion := falseQuestions){
   					venv = eval(fQuestion, inp, venv);
   				}
   			}
   		case if_then(AExpr condition, list[AQuestion] trueQuestions):
   			if (eval(condition, venv) == vbool(true)){
-  				for (/AQuestion tQuestion <- trueQuestions){
+  				for (/AQuestion tQuestion := trueQuestions){
   					venv = eval(tQuestion, inp, venv);
   				}
   			}
   	}
  	return venv; 
 }
-
 Value eval(AExpr e, VEnv venv) {
   switch (e) {
   		case ref(AId x): return venv[x.name];
@@ -157,3 +141,15 @@ Value eval(AExpr e, VEnv venv) {
   return vunknown();  
 }
 
+/* for testing
+   import ParseTree;
+   import Syntax;
+   l = //copy source location//;
+   pt = parse(#start[Form], l);
+   import CST2AST;
+   ast = cst2ast(pt);
+   import Eval;
+   inp = input("sellingPrice", vint(30));
+   venv = intialEnv(ast);
+   evaluated = eval(ast, inp, venv);
+*/

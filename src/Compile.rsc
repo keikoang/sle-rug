@@ -1,13 +1,3 @@
-/* for testing
-icmport ParseTree;
-import Syntax;
-l = //copy source location//;
-pt = parse(#start[Form], l);
-import CST2AST;
-ast = cst2ast(pt);
-import Compile;
-compile(ast);
-*/
 module Compile
 
 import AST;
@@ -91,90 +81,16 @@ HTML5Attr type2html(AType qtype) {
 
 
 str form2js(AForm f) {
-  return "function <f.name> () {\n" 
-  + questions2js(f.questions) 
-  + "\n}\n" ;
+  return "";
 }
 
-str questions2js(list[AQuestion] questions) {
-	str jsQuestions = "";
-	for (AQuestion question <- questions){ 
-		jsQuestions += questions2js(question);
-	}
-	return jsQuestions;
-}
-
-str question2js(AQuestion question) {
-	str jsQuestion = "";
-	switch(question) {	
-		case normal_question(str label, AId ident, AType qtype):
-			return "function <ident.name> () {\n"
-			 + "\t return " + type2js(qtype, ident.name) + ";"
-			 + "\n}\n";
-		case computed_question(str label, AId ident, AType qtype, AExpr expr):
-			return "function <ident.name> () {\n"
-			+ "\t return " + expr2js(expr) + ";"
-			+ "\n}\n";	
-		case block(list[AQuestion] questions):
-			return questions2js(questions);
-		case if_then_else(AExpr condition, list[AQuestion] trueQuestions, list[AQuestion] falseQuestions):
-			jsQuestion += questions2js(trueQuestions) + questions2js(falseQuestions);
-		case if_then(AExpr condition, list[AQuestion] trueQuestions):
-			jsQuestion += questions2js(trueQuestions);
-	}
-	return jsQuestion;
-}
-
-str type2js(AType qtype, str identName) {
-	str jsType = "";
-	switch(qtype) {
-		case integer():
-			jsType += "parseInt(document.getElementById(\"<identName>\").value)";
-		case boolean():
-			jsType += "document.getElementById(\"<identName>\").checked";
-		case string():
-			jsType += "document.getElementById(\"<identName>\").value";
-	}
-	return jsType;
-}
-
-str expr2js(AExpr expr) {
-	switch(expr) {
-		case ref(id(str name)) :
-			return " <name> ";
-		case boolean(bool b):
-			return " " + toString(b) + " ";
-		case integer(int n):
-			return " " + toString(n) + " ";
-		case string(str s):
-			return " <s> "; 
-		case pars(AExpr e):
-			return "(" 	+ expr2js(e) + ")";
-		case not(AExpr e):
-			return "!" + expr2js(e);
-		case mul(AExpr left, AExpr right):
-			return expr2js(left) + "*" + expr2js(right);
-		case div(AExpr left, AExpr right):
-			return expr2js(left) + "/" + expr2js(right);
-		case add(AExpr left, AExpr right):
-			return expr2js(left) + "+" + expr2js(right);
-		case sub(AExpr left, AExpr right):
-			return expr2js(left) + "-" + expr2js(right);
-		case eq(AExpr left, AExpr right):
-			return expr2js(left) + "==" + expr2js(right);
-		case neq(AExpr left, AExpr right):
-			return expr2js(left) + "!=" + expr2js(right);
-		case gt(AExpr left, AExpr right):
-			return expr2js(left) + "\>" + expr2js(right);
-		case lt(AExpr left, AExpr right):
-			return expr2js(left) + "\<" + expr2js(right);
-		case leq(AExpr left, AExpr right):
-			return expr2js(left) + "\<=" + expr2js(right);
-		case geq(AExpr left, AExpr right):
-			return expr2js(left) + "\>=" + expr2js(right);
-		case and(AExpr left, AExpr right):
-			return expr2js(left) + "&&" + expr2js(right);
-		case or(AExpr left, AExpr right):
-			return expr2js(left) + "||" + expr2js(right);
-	}
-}
+/* for testing
+   import ParseTree;
+   import Syntax;
+   l = //copy source location//;
+   pt = parse(#start[Form], l);
+   import CST2AST;
+   ast = cst2ast(pt);
+   import Compile;
+   compile(ast);
+*/
