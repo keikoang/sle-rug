@@ -34,14 +34,3 @@ Use uses(AForm f) {
 Def defs(AForm f) {
 	return {<q.ident.name, q.src> | /AQuestion q := f.questions, q has ident};
 }
-
-/* for testing
-   import ParseTree;
-   import Syntax;
-   l = //copy source location//;
-   pt = parse(#start[Form], l);
-   import CST2AST; 
-   ast = cst2ast(pt);
-   import Resolve;
-   graph = resolve(ast);
-*/

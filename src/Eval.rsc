@@ -140,16 +140,3 @@ Value eval(AExpr e, VEnv venv) {
   }
   return vunknown();  
 }
-
-/* for testing
-   import ParseTree;
-   import Syntax;
-   l = //copy source location//;
-   pt = parse(#start[Form], l);
-   import CST2AST;
-   ast = cst2ast(pt);
-   import Eval;
-   inp = input("sellingPrice", vint(30));
-   venv = intialEnv(ast);
-   evaluated = eval(ast, inp, venv);
-*/

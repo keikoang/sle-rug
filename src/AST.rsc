@@ -12,7 +12,7 @@ data AForm(loc src = |tmp:///|)
   ; 
 
 data AQuestion(loc src = |tmp:///|)
-  = normal_question(str label, AId ident, AType qtype)
+  = normal_question(str label, AId ident, AType qtype) //question without expression
   | computed_question(str label, AId ident, AType qtype, AExpr expr)
   | block(list[AQuestion] questions)
   | if_then_else(AExpr condition, list[AQuestion] trueQuestions, list[AQuestion] falseQuestions)
@@ -48,12 +48,3 @@ data AType(loc src = |tmp:///|)
   | integer()
   | string()
   ;
-  
-/* for testing
-   import ParseTree;
-   import Syntax;
-   l = //copy source location//;
-   pt = parse(#start[Form], l);
-   import CST2AST;
-   ast = cst2ast(pt);
-*/

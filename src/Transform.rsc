@@ -64,20 +64,15 @@ list[AQuestion] flatten(AQuestion aQuestion, AExpr expr) {
  */
  
 start[Form] rename(start[Form] f, loc useOrDef, str newName, UseDef useDef) {
-   	Id newId;
-   	try {
-   	 newId = [Id]newName;
-   	} catch: {
-   		print("The entered name is invalid to use for replacing");
-   		return f;
-   	}
-   	AForm ast = cst2ast(f);
+   	set[loc] toRename = {useOrDef} + {l | <useOrDef, loc l> <-useDef} + {l | <loc l, useOrDef> <- useDef};
+	
+	AForm ast = cst2ast(f);
    	str oldName = getOldName(ast, useOrDef);
-   	return visit(f) {
-   		case (Id)`<Id thisId>` => newId when "<thisId>" == oldName
-   	}
+	return visit (f){
+		case (Id)`<Id name>` => [Id]newName when "<name>" == oldName
+  	}
 } 
- 
+
 str getOldName(AForm form, loc useOrDef) {
 	visit (form) {
 		case normal_question(str _, AId id,  AType _, src = loc s):
@@ -95,5 +90,3 @@ str getOldName(AForm form, loc useOrDef) {
 	}
 	return " ";
 } 
- 
- 

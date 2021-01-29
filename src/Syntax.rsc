@@ -72,10 +72,3 @@ lexical Bool
   | "false"
   ;
 
-/*  For testing:
-	import ParseTree;
-	import Syntax;
-	l = //copy source location//;
-	pt = parse(#start[Form], l); 
-*/
-
